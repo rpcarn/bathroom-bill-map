@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Bathroom Bill Map</title>
+	<meta name="description" content="An interactive map visualizing transgender bathroom legislation in the United States.">
+	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="apple-touch-icon" href="favicon.png">
+
+	<!-- Open Graph Meta -->
+	<meta property="og:title" content="Bathroom Bill Map" />
+	<meta property="og:description"content="An interactive map visualizing transgender bathroom legislation in the United States."/>
+	<meta property="og:site_name" content="Bathroom Bill Map" />
+	<meta property="og:url" content="https://sean.digital/bbmap/" />
+	<meta property="og:image" content="https://sean.digital/bbmap/bathroom-bill-map.jpg" />
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:image:src" content="https://sean.digital/bbmap/bathroom-bill-map.jpg">
+	<meta name="twitter:site" content="@illah">
+	<meta name="twitter:creator" content="@illah">
+	<meta name="twitter:description" content="An interactive map visualizing transgender bathroom legislation in the United States.">
+	<meta name="twitter:title" content="Bathroom Bill Map">
+	<meta name="twitter:url" content="https://sean.digital/bbmap/">
+
+	<!-- D3 + TopoJSON -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js"></script>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<!-- Datamaps -->
+	<script src="js/datamaps.all.js"></script>
+	<script src="js/datamaps-zoomto.min.js"></script>
+
+	<!-- Styles -->
+	<link href='https://fonts.googleapis.com/css?family=Patua+One|Fredoka+One' rel='stylesheet' type='text/css'>
+	<style>
+		body {
+			background-color: #e6d9ad;
+			font-size: 1.5em;
+		}
+		div#map_election {
+			position: relative;
+			width: 100%;
+			height: 20%;
+		}
+
+		g.labels text, div.hoverinfo b {
+			font-family: 'Patua One', serif !important;
+		}
+		div.hoverinfo b {
+			font-family: 'Patua One', serif !important;
+		}
+		div#mapButtons {
+			text-align: center;
+		}
+		div#mapButtons button {
+			margin: 1em 0 0 0;
+		}
+		ul.sources {
+			font-size: 0.75em;
+		}
+		.btn-primary {
+			background-color: #056B6F;
+		}
+		.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+			background-color: #1F7073;
+		}
+		div.hoverinfo b {
+				font-size: 1em !important;
+		}
+
+		.gradient1 {
+		  display: inline-block;
+		  font-size: 4em;
+		  margin: 0;
+		  opacity: 0.9;
+		  background: white;
+		  color: black;
+		  position: relative;
+		  text-shadow: 1px 1px 0px #04161f, 1px -1px 0px #04161f, -1px -1px 0px #04161f, -1px 1px 0px #04161f;
+		}
+		.gradient1::before, .gradient1::after {
+		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  pointer-events: none;
+		}
+		.gradient1::before {
+		  background: -webkit-linear-gradient(left, #23966c, #faaa54, #e23b4a, #db0768, #360670);
+		  background: linear-gradient(to right, #23966c, #faaa54, #e23b4a, #db0768, #360670);
+		  content: '';
+		  display: block;
+		  mix-blend-mode: screen;
+		}
+		.gradient1::after {
+		  content: "Bathroom Bill Map";
+		  background: #e6d9ad;
+		  color: white;
+		  mix-blend-mode: multiply;
+		}
+		h1 {
+			font-family: 'Fredoka One', serif;
+			font-size: 4em;
+			line-height: 1.25em;
+		}
+		header, footer {
+			text-align: center;
+			padding: 1em 0 0 0;
+		}
+		footer {
+			font-size: 0.75em;
+			padding: 1em 0;
+		}
+		section#text h3 {
+			font-family: 'Patua One', serif;
+		}
+
+		@media (max-width: 768px) {
+			g.labels text {
+				font-size: 0.5em !important;
+			}
+		}
+		@media (min-width: 768px) {
+			g.labels text, div.hoverinfo b {
+				font-size: 1em !important;
+			}
+			section#text, div#mapButtons {
+				width: 80%;
+				margin: auto;
+			}
+		}
+		</style>
+</head>
+
+<body>
+<div class="container-fluid">
+
+<header>
+	<h1 class="gradient1">Bathroom Bill Map</h1>
+</header>
+
+<!-- bbmap -->
+<div id="map_election"></div>
+<div id="mapButtons">
+    <button class="btn btn-primary" onclick="west();" id="west">West</button>
+    <button class="btn btn-primary" onclick="midwest();" id="midwest">Midwest</button>
+    <button class="btn btn-primary" onclick="northeast();" id="northeast">Northeast</button>
+    <button class="btn btn-primary" onclick="south();" id="south">South</button>
+    <button class="btn btn-primary" onclick="reset();" id="reset">Reset</button>
+</div> <!--mapButtons-->
+
+<section id="text">
+	<h3>What is a Bathroom Bill?</h3>
+	<p>A piece of legislation that regulates transgender people's use of public facilities like bathrooms or changing rooms. Legislation might <b>allow</b> transgender people to use a public facility that aligns with their gender identity or <b>bar</b> them from it, instead requiring that they use single-sex facilities or facilities that match their sex assigned at birth.</p>
+
+	<p><a href="/contact/">Contact me</a> to add data or report a problem.</p>
+
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headingOne">
+	      <h4 class="panel-title">
+	        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+	          Sources
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+	      <div class="panel-body">
+			<ul class="sources">
+				<li>Oxford, Alabama passed a city ordinance on April 26 2016 barring transgender people from public bathrooms that match their gender identity. <a href="http://www.cnn.com/2016/04/27/health/transgender-laws-policies/">citation</a>
+				<li>FL proposed a bathroom bill that did not pass. <a href="http://www.advocate.com/politics/2015/04/28/breaking-floridas-trans-bathroom-bill-dies">citation</a>
+				<LI>HI Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>IL Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>IL proposed a bathroom bill (barring) that was sent to subcommittee 4/5/16. <a href="http://www.centralillinoisproud.com/news/local-news/transgender-bathroom-bill-in-illinois-moved-to-subcommittee">citation</a>
+				<LI>IN Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>KS Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>KY proposed a bathroom bill that did not pass on 2/27/2015. <a href="http://www.advocate.com/politics/transgender/2015/03/25/kentuckys-transphobic-legislation-dies-after-last-ditch-effort">citation</a>
+				<LI>KY Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>MA is debating a bill that would "ban discrimination against transgender people in all public accommodations." 4/1/2016. <a href="http://www.thesunchronicle.com/news/local_news/bathroom-bill-pushed-on-beacon-hill/article_c8e3bcd8-f879-11e5-b0a3-f3b424b4057a.html">citation</a>
+				<LI>MA Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>MN Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>MN proposed a bathroom bill that did not pass. <a href="http://www.twincities.com/politics/ci_28015629/minnesota-senate-shoots-down-transgender-bathroom-restrictions">citation</a>
+				<LI>MS Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>MS passed a bathroom bill on 4/5/2016. <a href="http://time.com/4282391/mississippi-law-refuse-gay-couples/">citation</a>
+				<LI>MO Proposed Against  <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>Asheville, NC passed a city ordinance protecting transgender people using gender ID bathrooms in Feb of 2016. <a href="http://www.nytimes.com/2016/03/24/us/north-carolina-to-limit-bathroom-use-by-birth-gender.html">citation</a>
+				<li>NC passed a bathroom bill on 3/23/2016.  <a href="http://www.nytimes.com/2016/03/24/us/north-carolina-to-limit-bathroom-use-by-birth-gender.html">citation</a>
+				<LI>OK Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>SC Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>SD proposed a bathroom bill that did not pass in Mar of 2016. <a href="http://www.nytimes.com/2016/03/24/us/north-carolina-to-limit-bathroom-use-by-birth-gender.html">citation</a>
+				<LI>SD Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<li>TN proposed a bathroom bill that did not pass in Mar of 2016. <a href="http://www.nytimes.com/2016/03/24/us/north-carolina-to-limit-bathroom-use-by-birth-gender.html">citation</a>
+				<LI>TN Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>VA Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>WA Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+				<LI>WI Proposed barring <a href='http://www.transequality.org/action-center'>citation: NCTE</a>
+			</ul>
+			<p><strong>Additional Citations</strong></p>
+			<ul class="sources">
+				<li><a target="new" href="http://www.transequality.org/action-center">TransEquality.org</a>
+			</ul>
+	      </div>
+	  </div>
+	  </div>
+	</div><!--sources accordion-->
+
+</section> <!--text-->
+
+<footer>
+	Created by <a href="http://rpcarn.com/" target="new">Rob Carney</a> and <a href="https://sean.digital/" target="new">Sean Mulholland</a><br />
+	<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Bathroom Bill Map</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. <br />
+	<a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="new"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a>
+</footer>
+
+<script>
+	var election = new Datamap({
+		scope: 'usa',
+		responsive: true,
+		element: document.getElementById('map_election'),
+		// done: function(datamap) {
+		//   datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
+		//    function redraw() {
+		//     datamap.svg.selectAll("g").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		//   }},
+		geographyConfig: {
+			popupTemplate: function(geography, data) {
+				return '<div class="hoverinfo"><b>' + geography.properties.name + '</b><br>' +  data.notes + ' '
+			},
+	        highlightOnHover: true,
+	        highlightFillColor: '#9d4b02',
+	        highlightBorderWidth: 2,
+	        highlightBorderColor: '#e6d9ad',
+	        borderColor: '#e6d9ad',
+	        borderWidth: 2
+	      	},
+		dataUrl: 'bbmap.json',
+
+		fills: {
+			'NO DATA': '#ad6a02',
+
+			'Proposed Allow': '#10b1b7',
+			'City Allow': '#056b6f',
+			'Allow': '#056b6f',
+
+			'Proposed Bar': '#ff7a01',
+			'City Bar': '#ff4228',
+			'Bar': '#ff4228',
+
+			'Mixed': '#056b6f',
+			'Mixed Inactive': '#056b6f',
+			'Mixed Active': '#9d4b02',
+			defaultFill: '#ad6a02'
+		}
+	});
+
+	election.labels();
+
+	window.addEventListener('resize', function() {
+	    election.resize();
+	});
+
+	var westOp = {
+	    scaleFactor: 1.5,
+	    center: {
+	        lat: 40,
+	        lng: -110
+	    },
+	    transition: {
+	        duration: 1000
+	    }
+	};
+
+	var midwestOp = {
+	    scaleFactor: 1.7,
+	    center: {
+	        lat: 40,
+	        lng: -100
+	    },
+	    transition: {
+	        duration: 1000
+	    }
+	};
+
+	var northeastOp = {
+	    scaleFactor: 2.5,
+	    center: {
+	        lat: 43,
+	        lng: -77
+	    },
+	    transition: {
+	        duration: 1000
+	    }
+	};
+
+	var southOp = {
+	    scaleFactor: 1.7,
+	    center: {
+	        lat: 35,
+	        lng: -90
+	    },
+	    transition: {
+	        duration: 1000
+	    }
+	};
+
+	var resetOp = {
+	    scaleFactor: 1,
+	    center: {
+	        lat: 38.7,
+	        lng: -96.6
+	    },
+	    transition: {
+	        duration: 1000
+	    }
+	};
+	function west() {
+	    election.zoomto(westOp);
+	}
+	function midwest() {
+	    election.zoomto(midwestOp);
+	}
+	function northeast() {
+	    election.zoomto(northeastOp);
+	}
+	function south() {
+	    election.zoomto(southOp);
+	}
+	function reset() {
+	    election.zoomto(resetOp);
+	}
+</script>
+
+</div><!--container-fluid-->
+</body>
+</html>
