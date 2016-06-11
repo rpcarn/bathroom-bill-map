@@ -1,0 +1,65 @@
+<!-- Template taken from http://webdesign.tutsplus.com/tutorials/building-a-bootstrap-contact-form-using-php-and-ajax--cms-23068 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Contact - Bathroom Bill Map</title>
+    <meta name="description" content="An interactive map visualizing transgender bathroom legislation in the United States.">
+  	<link rel="icon" type="image/png" href="favicon.png">
+  	<link rel="apple-touch-icon" href="favicon.png">
+
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <!-- Bootstrap -->
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Patua+One|Fredoka+One' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/animate.css">
+	  <link rel="stylesheet" href="css/bbmap.css" rel='stylesheet' type='text/css'>
+</head>
+<body style="background-color: #e6d9ad;">
+<div class="container-fluid">
+<div class="row">
+<div class="col-sm-6 col-sm-offset-3">
+    <header>
+    	<h1 class="gradient1">Bathroom Bill Map</h1>
+    </header>
+    <div class="well" style="margin-top: 5%;color:inherit;background-color: rgba(255, 255, 255, 0);border:none;">
+    <section id="text">
+			<h3>Do you have data to add? Questions?<br><br>Use this form!</h3>
+    </section>
+    <form role="form" id="contactForm" data-toggle="validator" class="shake">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label for="name" class="h4">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name" required data-error="What's your name?">
+                <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="email" class="h4">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="message" class="h4 ">Message</label>
+            <textarea id="message" class="form-control" rows="5" placeholder="Enter your message" required></textarea>
+            <div class="help-block with-errors"></div>
+        </div>
+        <button type="submit" id="form-submit" class="btn btn-success btn-lg pull-right ">Submit</button>
+        <div id="msgSubmit" class="h3 text-center hidden"></div>
+        <div class="clearfix"></div>
+    </form>
+    </div>
+</div>
+</div>
+</div>
+</body>
+<script  type="text/javascript" src="js/vendor/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/validator.min.js"></script>
+<script type="text/javascript" src="js/form-scripts.js"></script>
+</html>

@@ -1,0 +1,130 @@
+body {
+  background-color: #e6d9ad;
+  font-size: 1.5em;
+}
+div#map_election {
+  position: relative;
+  width: 100%;
+  height: 20%;
+}
+
+g.labels text, div.hoverinfo b {
+  font-family: 'Patua One', serif !important;
+}
+div.hoverinfo b {
+  font-family: 'Patua One', serif !important;
+}
+div#mapButtons {
+  text-align: center;
+}
+div#mapButtons button {
+  margin: 1em 0 0 0;
+}
+ul.sources {
+  font-size: 0.75em;
+}
+.btn-primary {
+  background-color: #056B6F;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #1F7073;
+}
+div.hoverinfo b {
+    font-size: 1em !important;
+}
+
+.gradient1 {
+  display: inline-block;
+  font-size: 4em;
+  margin: 0;
+  opacity: 0.9;
+  background: white;
+  color: black;
+  position: relative;
+  text-shadow: 1px 1px 0px #04161f, 1px -1px 0px #04161f, -1px -1px 0px #04161f, -1px 1px 0px #04161f;
+}
+.gradient1::before, .gradient1::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+}
+.gradient1::before {
+  background: -webkit-linear-gradient(left, #23966c, #faaa54, #e23b4a, #db0768, #360670);
+  background: linear-gradient(to right, #23966c, #faaa54, #e23b4a, #db0768, #360670);
+  content: '';
+  display: block;
+  mix-blend-mode: screen;
+}
+.gradient1::after {
+  content: "Bathroom Bill Map";
+  background: #e6d9ad;
+  color: white;
+  mix-blend-mode: multiply;
+}
+h1 {
+  font-family: 'Fredoka One', serif;
+  font-size: 4em;
+  line-height: 1.25em;
+}
+header, footer {
+  text-align: center;
+  padding: 1em 0 0 0;
+}
+footer {
+  font-size: 0.75em;
+  padding: 1em 0;
+}
+section#text h3 {
+  font-family: 'Patua One', serif;
+}
+section#text {
+  text-align: center;
+}
+div#accordion {
+  text-align: left;
+}
+
+div.legend {
+  display: inline-block;
+  font-weight: bold;
+  margin: 0 1em 0 0;
+}
+div.legend::before {
+  height: 1em;
+  width: 1em;
+  border-radius: .25em;
+  display: inline-block;
+  margin: 0 0.25em 0 0.5em;
+  content: "";
+}
+
+div.legend.nodata::before {
+  background-color: #ad6a02;
+}
+div.legend.failed::before {
+  background-color: #ff7a01;
+}
+div.legend.ban::before {
+  background-color: #ff4228;
+}
+div.legend.allow::before {
+  background-color: #308e5e;
+}
+
+@media (max-width: 768px) {
+  g.labels text {
+    font-size: 0.5em !important;
+  }
+}
+@media (min-width: 768px) {
+  g.labels text, div.hoverinfo b {
+    font-size: 1em !important;
+  }
+  section#text, div#mapButtons {
+    width: 80%;
+    margin: auto;
+  }
+}
